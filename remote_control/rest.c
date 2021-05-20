@@ -1,5 +1,5 @@
 /**
- * This file uses code extracted from an example in the repository of Ulfius
+ * This file uses code extracted from an example in the repository of Ulfius library
  */
 
 #include <stdio.h>
