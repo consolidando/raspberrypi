@@ -2,7 +2,6 @@
  * Simple gpiod library example of toggling a LED connected to a GPIO line
  * using a pushbutton connected to another GPIO line. 
  * If the button is not pressed in 10 seconds the program ends.
- * 
  */
 
 #include <gpiod.h>
