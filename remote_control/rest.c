@@ -1,5 +1,13 @@
 /**
- * This file uses code extracted from an example in the repository of Ulfius library
+ * This file is part of the example in  the
+ * Post: http://diy.elmolidelanoguera.com/2021/05/como-controlar-tu-casa-desde-una-pagina.html
+ * in the
+ * Blog: http://diy.elmolidelanoguera.com/
+ * 
+ * Description:
+ *   Builds a server with a REST led resource & a websocked for returning state of the led
+ *   to the clients.
+ *   Uses Ulfius library.
  */
 
 #include <stdio.h>
@@ -37,7 +45,8 @@ int main(void)
   {
     printf("Start framework on port %d\n", instance.port);
 
-    // Start gpios
+    // Initialises gpios
+    // and waits until the button is pressed
     start_gpio();
   } 
   else 

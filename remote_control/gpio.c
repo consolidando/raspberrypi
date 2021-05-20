@@ -1,3 +1,14 @@
+/*
+ * This file is part of the example in the
+ * Post: http://diy.elmolidelanoguera.com/2021/05/como-controlar-tu-casa-desde-una-pagina.html
+ * in the
+ * Blog: http://diy.elmolidelanoguera.com/
+ * 
+ * Uses gpiod library 
+ * Pushbutton ends the program
+ * Provides two functions for setting and getting led state 
+ */
+
 #include <gpiod.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -26,7 +37,7 @@ int start_gpio(void)
   // input
   gpiod_line_request_rising_edge_events(button, "test");
 
-   
+  // if the button is pressed the program ends 
   for(;;) 
   {         
     // waits for 10 seconds for button changes
