@@ -1,4 +1,10 @@
 /*
+ * This file is part of the example in the
+ * Post: http://diy.elmolidelanoguera.com/2021/04/raspberry-pi-4-model-b.html
+ * in the
+ * Blog: http://diy.elmolidelanoguera.com/
+ * 
+ * Description:
  * Simple gpiod library example of toggling a LED connected to a GPIO line
  * using a pushbutton connected to another GPIO line. 
  * If the button is not pressed in 10 seconds the program ends.
