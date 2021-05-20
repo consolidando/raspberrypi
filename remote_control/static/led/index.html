@@ -1,0 +1,38 @@
+<html>
+<body>
+    <script>
+        let state = 0; 
+        function setRemoteLedState(state) {                        
+            fetch("/led/", {
+                method: 'PUT',
+                headers:
+                {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({state})
+            });
+        }
+
+        function setLocaleLedState(newState)
+        {
+            state = newState;
+            document.getElementById("button").innerText  
+                  = state ? "on" : "off";
+        }
+
+        function changeLedState() 
+        {                  
+            setRemoteLedState(state ? 0 : 1);
+        }           
+
+        let ws = new WebSocket("ws://192.168.1.101:8080/websocket");
+
+        ws.onmessage = function(e) 
+        {
+            setLocaleLedState(JSON.parse(e.data).state);
+        }
+
+    </script>
+    <button id="button" onclick="changeLedState()">on</button>
+</body>
+</html>
