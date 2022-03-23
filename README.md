@@ -5,7 +5,7 @@ This repository includes examples from the blog [Consolidando](http://diy.elmoli
 ## hello_gpiod
 This example uses the gpiod library to program a led and a button.
 
-çPOST: [Primeros pasos con Raspberry Pi 4 Model B](http://diy.elmolidelanoguera.com/2021/04/raspberry-pi-4-model-b.html)
+POST: [Primeros pasos con Raspberry Pi 4 Model B](http://diy.elmolidelanoguera.com/2021/04/raspberry-pi-4-model-b.html)
 
 
 ## remote_control
