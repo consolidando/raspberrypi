@@ -9,7 +9,7 @@ int main(void)
 {
   const char *chipname = "gpiochip0";
   struct gpiod_chip *chip;
-  struct gpiod_line *button;
+  struct gpiod_line *button; 
   struct timespec ts = {1, 0};
   struct gpiod_line_event event;
   int ret;
