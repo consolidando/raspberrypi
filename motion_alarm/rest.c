@@ -13,7 +13,7 @@
 
 #define TIMEOUT 5.0
 
-void send_post(int s, char *hostname, char *port, char *path,char *jwt, char *json)
+void sendPost(int s, char *hostname, char *port, char *path,char *jwt, char *json)
 {
     char buffer[2048];
 
@@ -30,7 +30,7 @@ void send_post(int s, char *hostname, char *port, char *path,char *jwt, char *js
     send(s, buffer, strlen(buffer), 0);    
 }
 
-int connect_to_host(char *hostname, char *port)
+int connectToHost(char *hostname, char *port)
 {
     printf("Configuring remote address...\n");
     struct addrinfo hints;
@@ -76,12 +76,19 @@ int connect_to_host(char *hostname, char *port)
     return server;
 }
 
-int postJSON(char *hostname, char *port, char *path, char *json,char* jwt)
+int restPostJSON(char *hostname, char *port, char *path, char *json,char* jwt)
 {
 
-    int server = connect_to_host(hostname, port);
+    int server = connectToHost(hostname, port);
     
-    send_post(server, hostname, port, path, jwt, json);
+    sendPost(server, hostname, port, path, jwt, json);
+
+    receiveRespose(server);
+
+}
+
+int receiveRespose(int server)
+{
 
     const clock_t start_time = clock();
 

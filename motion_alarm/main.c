@@ -3,30 +3,31 @@
 #include <unistd.h>
 #include <jansson.h>
 
-#include "gpio.h"
-#include "post.h"
+#include "rest.h"
 #include "jwt_create.h"
 
-struct gpiod_line *led;
+struct gpiod_line *lamp;
 
 void sendAlarm()
 {
   char *jwt;
-  char aux[256];
+  char aux[100];
 
   jwt = jwtCreate("rsa_private.pem", "Project Id", "MyFistDeviceID");
 
-  // notification
+  // current time
   time_t current_time = time(NULL);
   struct tm *local_time = localtime(&current_time);
-  sprintf(aux, "Motion detected at %s", asctime(local_time));
 
+  // json notification  
   json_t *root = json_object();
+
   json_object_set_new(root, "title", json_string("Desk Alarm"));
+  sprintf(aux, "Motion detected at %s", asctime(local_time));
   json_object_set_new(root, "body", json_string(aux));
 
   // send an alarm
-  postJSON("192.168.1.36",
+  restPostJSON("192.168.1.36",
            "8080",
            "resource/alarm/notification",
            json_dumps(root, 0),
@@ -35,11 +36,21 @@ void sendAlarm()
   json_decref(root);
 }
 
+void turn_on_lamp()
+{
+  gpiod_line_set_value(lamp, 1);
+}
+
+void turn_off_lamp()
+{
+  gpiod_line_set_value(lamp, 0);
+}
+
 int main(void)
 {
   const char *chipname = "gpiochip0";
   struct gpiod_chip *chip;
-  struct gpiod_line *button;
+  struct gpiod_line *motion_sensor;
   struct timespec ts = {1, 0};
   struct gpiod_line_event event[3];
   int ret;
@@ -48,33 +59,32 @@ int main(void)
   chip = gpiod_chip_open_by_name(chipname);
 
   // Open GPIO lines
-  led = gpiod_chip_get_line(chip, 21);
-  button = gpiod_chip_get_line(chip, 6);
+  lamp = gpiod_chip_get_line(chip, 21);
+  motion_sensor = gpiod_chip_get_line(chip, 6);
 
   // output
-  gpiod_line_request_output(led, "test", GPIOD_LINE_ACTIVE_STATE_HIGH);
+  gpiod_line_request_output(lamp, "test", GPIOD_LINE_ACTIVE_STATE_HIGH);
   // input with pull-up resistor
-  gpiod_line_request_falling_edge_events_flags(button, "test", GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP);
+  gpiod_line_request_falling_edge_events_flags(motion_sensor, "test", GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP);
 
   for (;;)
   {
     for (;;)
     {
-      ret = gpiod_line_event_wait(button, &ts);
+      ret = gpiod_line_event_wait(motion_sensor, &ts);
       if (ret == 1)
       {
         break;
       }
     }
 
-    ret = gpiod_line_event_read_multiple(button, event, 3);
-    if (ret >= 0)
-    {
-      printf("Events %d.\n\n", ret);
+    ret = gpiod_line_event_read(motion_sensor, &event[0]);
+    if (ret == 0)
+    {      
       // AC detected - motion detected
       if (event[0].event_type == GPIOD_LINE_EVENT_FALLING_EDGE)
       {
-        set_led_state(0);
+        turn_on_lamp();
 
         sendAlarm();
 
@@ -83,15 +93,15 @@ int main(void)
           usleep(500000); // 500ms
           
           // AC is still detected ?
-          ret = gpiod_line_get_value(button);          
+          ret = gpiod_line_get_value(motion_sensor);          
           if (ret == 1)
           {
-            set_led_state(1);
+            turn_off_lamp();
 
             // bounces --> multiple events
             usleep(50000); // 500ms
-            gpiod_line_event_wait(button, &ts);
-            ret = gpiod_line_event_read_multiple(button, event, 3);
+            gpiod_line_event_wait(motion_sensor, &ts);
+            ret = gpiod_line_event_read_multiple(motion_sensor, event, 3);
             break;
           }
         } while (1);
@@ -99,22 +109,16 @@ int main(void)
     }
   }
 
-  // turn off led;
-  gpiod_line_set_value(led, 0);
+  // turn off lamp;
+  gpiod_line_set_value(lamp, 0);
   // Release lines and chip
-  gpiod_line_release(led);
-  gpiod_line_release(button);
+  gpiod_line_release(lamp);
+  gpiod_line_release(motion_sensor);
   gpiod_chip_close(chip);
   //
   return 0;
 }
 
-void set_led_state(int on)
-{
-  gpiod_line_set_value(led, on);
-}
 
-int get_led_state()
-{
-  return (gpiod_line_get_value(led));
-}
+
+
