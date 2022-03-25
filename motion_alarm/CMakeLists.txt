@@ -8,9 +8,9 @@ project(${ProjectId} VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-add_executable(${PROJECT_NAME} gpio.c )
+add_executable(${PROJECT_NAME} gpio.c post.c jwt_create.c)
 
-target_link_libraries(${PROJECT_NAME} gpiod)
+target_link_libraries(${PROJECT_NAME} gpiod jwt jansson)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
