@@ -13,6 +13,8 @@
 
 #define TIMEOUT 5.0
 
+int receiveRespose(int server);
+
 void sendPost(int s, char *hostname, char *port, char *path,char *jwt, char *json)
 {
     char buffer[2048];
