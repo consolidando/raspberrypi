@@ -8,16 +8,13 @@
 
 struct gpiod_line *lamp;
 
-void sendAlarm()
+char* notificationJSONCreate()
 {
-  char *jwt;
-  char aux[100];
-
-  jwt = jwtCreate("rsa_private.pem", "Project Id", "MyFistDeviceID");
-
-  // current time
+   // current time
   time_t current_time = time(NULL);
   struct tm *local_time = localtime(&current_time);
+   char aux[100];
+  char *dump;
 
   // json notification  
   json_t *root = json_object();
@@ -26,24 +23,42 @@ void sendAlarm()
   sprintf(aux, "Motion detected at %s", asctime(local_time));
   json_object_set_new(root, "body", json_string(aux));
 
+  dump = json_dumps(root, 0);
+
+  json_decref(root);
+
+  return(dump);
+
+}
+
+// it sends an alarm to a server which forwards it to the mobile subscriber
+void sendAlarm()
+{
+  char *jwt;
+ 
+  // creates authentification token
+  jwt = jwtCreate("rsa_private.pem", "Project Id", "MyFistDeviceID");
+
   // send an alarm
   restPostJSON("192.168.1.36",
            "8080",
            "resource/alarm/notification",
-           json_dumps(root, 0),
+           notificationJSONCreate(),
            jwt);
 
-  json_decref(root);
+  
 }
 
+// lamp is on when GPIO is low level
 void turn_on_lamp()
-{
-  gpiod_line_set_value(lamp, 1);
+{  
+  gpiod_line_set_value(lamp, 0);
 }
 
+// lamp is off when GPIO is high level
 void turn_off_lamp()
 {
-  gpiod_line_set_value(lamp, 0);
+  gpiod_line_set_value(lamp, 1);
 }
 
 int main(void)
@@ -62,7 +77,7 @@ int main(void)
   lamp = gpiod_chip_get_line(chip, 21);
   motion_sensor = gpiod_chip_get_line(chip, 6);
 
-  // output
+  // output in state high by default
   gpiod_line_request_output(lamp, "test", GPIOD_LINE_ACTIVE_STATE_HIGH);
   // input with pull-up resistor
   gpiod_line_request_falling_edge_events_flags(motion_sensor, "test", GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP);
@@ -99,7 +114,7 @@ int main(void)
             turn_off_lamp();
 
             // bounces --> multiple events
-            usleep(50000); // 500ms
+            usleep(50000); // 50ms
             gpiod_line_event_wait(motion_sensor, &ts);
             ret = gpiod_line_event_read_multiple(motion_sensor, event, 3);
             break;

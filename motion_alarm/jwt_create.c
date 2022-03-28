@@ -7,6 +7,8 @@
 #include <string.h>
 #include <libgen.h>
 
+// gets iat and exp claims
+// expiration time: 24 h
 static void getIatExp(char *iat, char *exp, int time_size)
 {
     time_t now_seconds = time(NULL);
@@ -14,7 +16,8 @@ static void getIatExp(char *iat, char *exp, int time_size)
     snprintf(exp, time_size, "%lu", now_seconds + 24 * 60 * 60);
 }
 
-char* jwtCreate(char *opt_key_name,char* aud, char* deviceId)
+// creates an authentication token - jwt
+char* jwtCreate(char *opt_key_name, char* aud, char* deviceId)
 {
     size_t key_len = 0;
     FILE *fp_priv_key;

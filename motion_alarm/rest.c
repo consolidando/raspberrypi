@@ -15,7 +15,7 @@
 
 int receiveRespose(int server);
 
-void sendPost(int s, char *hostname, char *port, char *path,char *jwt, char *json)
+void sendPost(int socket, char *hostname, char *port, char *path,char *jwt, char *json)
 {
     char buffer[2048];
 
@@ -29,7 +29,7 @@ void sendPost(int s, char *hostname, char *port, char *path,char *jwt, char *jso
     sprintf(buffer + strlen(buffer), "\r\n");
     sprintf(buffer + strlen(buffer), "%s\r\n", json);
 
-    send(s, buffer, strlen(buffer), 0);    
+    send(socket, buffer, strlen(buffer), 0);    
 }
 
 int connectToHost(char *hostname, char *port)
