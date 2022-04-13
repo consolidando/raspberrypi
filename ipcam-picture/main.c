@@ -16,17 +16,18 @@ int main(int argc, char **argv)
 
     ret = openIpCam(IP_CAM_RESOURCE, &resource);
     if (ret == 0)
-        openVideoCodec(&resource);
+        ret = openVideoCodec(&resource);
     printf("***TAP start\n");
     if (ret == 0)
-        ret = openIpCam(IP_CAM_RESOURCE, &resource);
-    takeAPicture(&resource, TMP_FILE_1, 9, 0);
+        ret = takeAPicture(&resource, TMP_FILE_1, 9, 0);
     printf("***TAP end\n");
     printf("***TAP start\n");
+    //sleep(5);
     if (ret == 0)
         ret = takeAPicture(&resource, TMP_FILE_2, 9, 5);
     printf("***TAP end\n");
     printf("***TAP start\n");
+    //sleep(5);
     if (ret == 0)
         ret = takeAPicture(&resource, TMP_FILE_3, 9, 5);
     printf("***TAP end\n");

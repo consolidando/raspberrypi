@@ -163,7 +163,7 @@ int takeAPicture(RTSPResource *pResource,
                 av_packet_unref(&packet);
 
                 // flushing the codec ------------------------------------------
-                decode(pResource->pCodecContext, pResource->pInputFrame, &gotFrame, NULL);
+                decodePacketToFrame(pResource->pCodecContext, pResource->pInputFrame, &gotFrame, NULL);
 
                 if (frameDelay == 0)
                 {
