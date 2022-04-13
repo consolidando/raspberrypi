@@ -15,5 +15,11 @@ POST: [Cómo controlar tu casa desde una página web](http://diy.elmolidelanogue
 POST: [Controlando Corriente Alterna](https://diy.elmolidelanoguera.com/2022/03/controlando-corriente-alterna-rele.html)
 
 ## motion_alarm
+How to detect the presence of a person on our desktop
 
 POST: [Cómo detectar la presencia de una persona en nuestro escritorio](https://diy.elmolidelanoguera.com/2022/03/detectando-corriente-alterna-sensor-de.html)
+
+## ipcam-picture
+How to take a photo with an IP camera
+
+POST: [Cómo hacer una foto con una cámara IP - FFMpeg](https://diy.elmolidelanoguera.com/2022/04/como-hacer-una-foto-con-una-camara-ip.html)
