@@ -23,3 +23,9 @@ POST: [Cómo detectar la presencia de una persona en nuestro escritorio](https:/
 How to take a photo with an IP camera
 
 POST: [Cómo hacer una foto con una cámara IP - FFMpeg](https://diy.elmolidelanoguera.com/2022/04/como-hacer-una-foto-con-una-camara-ip.html)
+
+## ipcam_motion
+
+Improving an IP camera
+
+POST: [Mejorando una cámara IP - Raspberry PI](https://diy.elmolidelanoguera.com/2022/04/mejorando-una-camara-ip-raspberry-pi.html)
